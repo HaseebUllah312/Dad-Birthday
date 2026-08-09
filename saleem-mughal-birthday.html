@@ -56,6 +56,41 @@
     pointer-events: none; z-index: 2;
   }
 
+  /* ---------- TOP CONTROLS ---------- */
+  .top-controls {
+    position: fixed; top: 20px; right: 20px; z-index: 99;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .control-btn {
+    background: rgba(36, 26, 20, 0.85);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    padding: 9px 18px;
+    border-radius: 30px;
+    font-family: 'Lora', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.3s ease;
+  }
+  .control-btn:hover {
+    background: var(--gold); color: var(--ink); transform: translateY(-2px);
+  }
+
+  /* ---------- TOAST NOTIFICATION ---------- */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--gold); color: var(--ink); font-weight: 600;
+    padding: 10px 24px; border-radius: 20px; font-size: 0.9rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 1000; opacity: 0;
+    transition: all 0.4s ease;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0); opacity: 1;
+  }
+
   /* ---------- HERO SECTION ---------- */
   .hero{
     position: relative; min-height: 100vh;
@@ -146,7 +181,7 @@
     font-size: clamp(2rem, 4.5vw, 2.8rem); margin:0; color: var(--cream-text);
   }
 
-  /* ---------- CONCISE PARCHMENT LETTER & WISH ---------- */
+  /* ---------- PARCHMENT LETTER ---------- */
   .letter-wrap{ display:flex; justify-content:center; }
   .letter{
     position:relative; max-width: 720px; width:100%;
@@ -238,6 +273,42 @@
   }
   .btn-upload:hover { background: rgba(212, 163, 75, 0.15); color: #fff; }
 
+  /* ---------- WISHES & BLESSINGS BOARD SECTION ---------- */
+  .wishes-section { padding: 4rem 1.5rem; text-align: center; }
+  .wishes-action-top { margin-bottom: 2.5rem; text-align: center; }
+  .btn-add-wish {
+    background: linear-gradient(135deg, var(--gold), var(--marigold-deep));
+    color: #241a14; font-family: 'Playfair Display', serif; font-weight: 700;
+    font-size: 0.95rem; border: none; padding: 12px 28px; border-radius: 30px;
+    cursor: pointer; box-shadow: 0 6px 20px rgba(229,159,44,0.3); transition: all 0.3s ease;
+  }
+  .btn-add-wish:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(229,159,44,0.45); }
+
+  .wishes-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1.6rem; max-width: 1000px; margin: 0 auto;
+  }
+  .wish-card {
+    background: rgba(247, 238, 219, 0.06); border: 1px solid rgba(212, 163, 75, 0.28);
+    border-radius: 8px; padding: 1.6rem 1.4rem; text-align: left;
+    display: flex; flex-direction: column; justify-content: space-between;
+    backdrop-filter: blur(4px); transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .wish-card.featured {
+    background: linear-gradient(135deg, rgba(247, 238, 219, 0.09), rgba(212, 163, 75, 0.14));
+    border: 1.5px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  }
+  .wish-card:hover { transform: translateY(-4px); border-color: var(--gold); }
+  .wish-card p { font-size: 1.05rem; line-height: 1.8; color: var(--cream-text); opacity: 0.95; margin: 0 0 1.2rem; font-style: italic; }
+  .wish-meta { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(212, 163, 75, 0.2); padding-top: 0.8rem; }
+  .wish-meta .from { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--gold-light); }
+  .love-btn {
+    background: transparent; border: 1px solid rgba(212, 163, 75, 0.4); color: #e57373;
+    padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer;
+    display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;
+  }
+  .love-btn:hover { background: rgba(229, 115, 115, 0.18); transform: scale(1.08); }
+
   /* ---------- INTERACTIVE CAKE & CANDLE MODULE ---------- */
   .cake-section { text-align: center; padding: 4rem 1.5rem 2rem; }
   .cake-container { position: relative; display: inline-block; cursor: pointer; margin: 1.5rem 0; }
@@ -277,7 +348,7 @@
   footer .line{ font-family:'Caveat', cursive; font-size:1.8rem; color: var(--gold-light); }
   footer .fine{ font-size:.75rem; letter-spacing:.18em; text-transform:uppercase; color: var(--ink-soft); margin-top:.6rem; }
 
-  /* ---------- MODALS (LIGHTBOX) ---------- */
+  /* ---------- MODALS (LIGHTBOX & WISH FORM) ---------- */
   .modal-overlay {
     position: fixed; inset: 0; z-index: 100; background: rgba(15, 10, 7, 0.88);
     backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;
@@ -295,6 +366,18 @@
     border: none; background: transparent; cursor: pointer; color: var(--ink-soft);
   }
   .modal-card h3 { font-family: 'Playfair Display', serif; margin-top: 0; color: var(--maroon); font-size: 1.6rem; }
+  .form-group { margin-bottom: 1.2rem; text-align: left; }
+  .form-group label { display: block; font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 0.4rem; color: var(--ink-soft); }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--paper-edge);
+    border-radius: 4px; background: #fff8eb; font-family: 'Lora', serif; font-size: 0.95rem; color: var(--ink);
+  }
+  .btn-submit {
+    background: var(--maroon); color: #fff; border: none; padding: 10px 24px;
+    border-radius: 4px; font-family: 'Lora', serif; font-size: 0.95rem; cursor: pointer; width: 100%; margin-top: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--maroon-deep); }
+
   .lightbox-img-wrap { max-width: 90vw; max-height: 85vh; display: flex; flex-direction: column; align-items: center; }
   .lightbox-img { max-width: 100%; max-height: 72vh; border-radius: 6px; box-shadow: 0 15px 50px rgba(0,0,0,0.85); object-fit: contain; }
   .lightbox-cap { color: var(--gold-light); font-family: 'Caveat', cursive; font-size: 2rem; margin-top: 1.2rem; text-align: center; }
@@ -316,6 +399,16 @@
 <div class="grain"></div>
 <canvas id="petals-canvas"></canvas>
 <canvas id="sparkles-canvas"></canvas>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">Link copied to clipboard!</div>
+
+<!-- Top Navigation & Controls -->
+<div class="top-controls">
+  <button class="control-btn" id="shareBtn" title="Share website link">
+    <span>🔗</span> <span>Share</span>
+  </button>
+</div>
 
 <!-- HERO SECTION -->
 <section class="hero">
@@ -361,7 +454,7 @@
 <section id="letter">
   <div class="section-head">
     <span class="kicker">From Our Hearts</span>
-    <h2>A Note & Wish for You, Dad</h2>
+    <h2>A Note for You, Dad</h2>
   </div>
   <div class="letter-wrap">
     <div class="letter" id="parchmentLetter">
@@ -408,6 +501,29 @@
   <div class="gallery-actions">
     <input type="file" id="photoInput" accept="image/*" style="display:none">
     <button class="btn-upload" onclick="document.getElementById('photoInput').click()">📷 Add More Photos to Gallery</button>
+  </div>
+</section>
+
+<!-- LIVE WISHES & BLESSINGS BOARD SECTION -->
+<section id="wishes" class="wishes-section">
+  <div class="section-head">
+    <span class="kicker">Heartfelt Blessings</span>
+    <h2>Wishes & Messages Wall</h2>
+  </div>
+
+  <div class="wishes-action-top">
+    <button class="btn-add-wish" id="openWishModal">✍️ Leave Your Birthday Wish for Dad</button>
+  </div>
+
+  <div class="wishes-grid" id="wishesGrid">
+    <!-- Featured Wish from Son Haseeb -->
+    <div class="wish-card featured">
+      <p>"Dad, on your birthday, I want to thank you for being my constant guiding light, my biggest strength, and the truest role model I could ever ask for. Everything I am is because of your values and quiet sacrifices. May God bless you with long life, robust health, and peace of mind!"</p>
+      <div class="wish-meta">
+        <span class="from">— Your Son, Haseeb ❤️</span>
+        <button class="love-btn" onclick="addLove(this)">❤️ <span>100</span></button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -460,6 +576,25 @@
   <div class="lightbox-img-wrap">
     <img id="lightboxImg" class="lightbox-img" src="" alt="Memory Photo">
     <div class="lightbox-cap" id="lightboxCap">Memory Caption</div>
+  </div>
+</div>
+
+<!-- ADD WISH MODAL -->
+<div class="modal-overlay" id="wishModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeWishModal()">&times;</button>
+    <h3>Leave a Birthday Wish for Saleem Sir / Dad</h3>
+    <form id="wishForm">
+      <div class="form-group">
+        <label for="wishSender">Your Name & Role (e.g., Student, Relative, Friend)</label>
+        <input type="text" id="wishSender" required placeholder="e.g., Student / Ayesha / Colleague">
+      </div>
+      <div class="form-group">
+        <label for="wishText">Your Birthday Wish / Prayer</label>
+        <textarea id="wishText" rows="4" required placeholder="Write your heartfelt wish here..."></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Post Wish ❤️</button>
+    </form>
   </div>
 </div>
 
@@ -556,6 +691,17 @@
   }
   drawPetals();
 
+  // ---------- SHARE BUTTON TOAST ----------
+  const shareBtn = document.getElementById('shareBtn');
+  const toast = document.getElementById('toast');
+  shareBtn.addEventListener('click', () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }).catch(() => {});
+  });
+
   // ---------- WAX SEAL INTERACTIVE UNSEAL ----------
   const waxSeal = document.getElementById('waxSeal');
   const parchmentLetter = document.getElementById('parchmentLetter');
@@ -624,6 +770,68 @@
       reader.readAsDataURL(file);
     }
   });
+
+  // ---------- WISHES MODAL & LOCAL STORAGE ----------
+  const wishModal = document.getElementById('wishModal');
+  const openWishModalBtn = document.getElementById('openWishModal');
+  const wishForm = document.getElementById('wishForm');
+  const wishesGrid = document.getElementById('wishesGrid');
+
+  openWishModalBtn.addEventListener('click', () => wishModal.classList.add('active'));
+
+  function closeWishModal() {
+    wishModal.classList.remove('active');
+  }
+
+  wishForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const sender = document.getElementById('wishSender').value.trim();
+    const text = document.getElementById('wishText').value.trim();
+
+    if (sender && text) {
+      const wishCard = createWishCard(sender, text, 1);
+      wishesGrid.append(wishCard);
+      saveWishToStorage(sender, text);
+      wishForm.reset();
+      closeWishModal();
+    }
+  });
+
+  function createWishCard(sender, text, count = 1) {
+    const div = document.createElement('div');
+    div.className = 'wish-card';
+    div.innerHTML = `
+      <p>"${text}"</p>
+      <div class="wish-meta">
+        <span class="from">— ${sender}</span>
+        <button class="love-btn" onclick="addLove(this)">❤️ <span>${count}</span></button>
+      </div>
+    `;
+    return div;
+  }
+
+  function addLove(btn) {
+    const countSpan = btn.querySelector('span');
+    let current = parseInt(countSpan.textContent) || 0;
+    countSpan.textContent = current + 1;
+    btn.style.transform = 'scale(1.2)';
+    setTimeout(() => btn.style.transform = 'scale(1)', 200);
+  }
+
+  function saveWishToStorage(sender, text) {
+    const saved = JSON.parse(localStorage.getItem('sm_birthday_wishes') || '[]');
+    saved.push({ sender, text });
+    localStorage.setItem('sm_birthday_wishes', JSON.stringify(saved));
+  }
+
+  function loadSavedWishes() {
+    const saved = JSON.parse(localStorage.getItem('sm_birthday_wishes') || '[]');
+    saved.forEach(w => {
+      const card = createWishCard(w.sender, w.text, Math.floor(Math.random()*5)+1);
+      wishesGrid.append(card);
+    });
+  }
+  loadSavedWishes();
 
   // ---------- INTERACTIVE CAKE CANDLE BLOWOUT ----------
   const cakeContainer = document.getElementById('cakeContainer');
