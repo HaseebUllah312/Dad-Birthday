@@ -370,9 +370,9 @@
 <!-- Toast Notification -->
 <div class="toast" id="toast">Link copied to clipboard!</div>
 
-<!-- Background Music Audio Element -->
+<!-- Background Music Local Audio Element -->
 <audio id="bgSong" loop preload="auto">
-  <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg">
+  <source src="birthday-song.mp3" type="audio/mpeg">
 </audio>
 
 <!-- Top Navigation & Media Controls -->
@@ -664,6 +664,13 @@
 
   audioToggle.addEventListener('click', () => {
     if (!isPlaying) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      
       if (bgSong) {
         bgSong.play().then(() => {
           isPlaying = true;
@@ -671,6 +678,7 @@
           audioText.textContent = 'Mute Music';
           audioToggle.classList.add('audio-playing');
         }).catch(err => {
+          console.log('Falling back to synth player:', err);
           startSynthMusic();
         });
       } else {
