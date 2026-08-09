@@ -56,7 +56,7 @@
     pointer-events: none; z-index: 2;
   }
 
-  /* ---------- AUDIO CONTROLS & EQUALIZER ---------- */
+  /* ---------- TOP CONTROLS ---------- */
   .top-controls {
     position: fixed; top: 20px; right: 20px; z-index: 99;
     display: flex; gap: 12px; align-items: center;
@@ -77,21 +77,6 @@
   }
   .control-btn:hover {
     background: var(--gold); color: var(--ink); transform: translateY(-2px);
-  }
-
-  .eq-bars {
-    display: inline-flex; gap: 3px; align-items: flex-end; height: 12px;
-  }
-  .eq-bar {
-    width: 2.5px; background: var(--gold-light); height: 4px; border-radius: 1px;
-  }
-  .audio-playing .eq-bar:nth-child(1) { animation: eqAnim 0.8s ease-in-out infinite alternate; }
-  .audio-playing .eq-bar:nth-child(2) { animation: eqAnim 0.6s ease-in-out infinite alternate 0.2s; }
-  .audio-playing .eq-bar:nth-child(3) { animation: eqAnim 0.9s ease-in-out infinite alternate 0.4s; }
-
-  @keyframes eqAnim {
-    0% { height: 3px; }
-    100% { height: 14px; }
   }
 
   /* ---------- TOAST NOTIFICATION ---------- */
@@ -370,25 +355,10 @@
 <!-- Toast Notification -->
 <div class="toast" id="toast">Link copied to clipboard!</div>
 
-<!-- Background Music Local Audio Element -->
-<audio id="bgSong" loop preload="auto">
-  <source src="birthday-song.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Top Navigation & Media Controls -->
+<!-- Top Navigation & Controls -->
 <div class="top-controls">
   <button class="control-btn" id="shareBtn" title="Share website link">
     <span>🔗</span> <span>Share</span>
-  </button>
-
-  <button class="control-btn" id="audioToggle" aria-label="Toggle background music">
-    <span id="audioIcon">🎵</span>
-    <span id="audioText">Play Music</span>
-    <span class="eq-bars">
-      <span class="eq-bar"></span>
-      <span class="eq-bar"></span>
-      <span class="eq-bar"></span>
-    </span>
   </button>
 </div>
 
@@ -652,87 +622,6 @@
     setTimeout(() => { waxSeal.style.transform = 'rotate(-6deg)'; }, 400);
   });
 
-  // ---------- AUDIO BACKGROUND MUSIC PLAYER ----------
-  let audioCtx = null;
-  let isPlaying = false;
-  let melodyInterval = null;
-
-  const bgSong = document.getElementById('bgSong');
-  const audioToggle = document.getElementById('audioToggle');
-  const audioIcon = document.getElementById('audioIcon');
-  const audioText = document.getElementById('audioText');
-
-  audioToggle.addEventListener('click', () => {
-    if (!isPlaying) {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      
-      if (bgSong) {
-        bgSong.play().then(() => {
-          isPlaying = true;
-          audioIcon.textContent = '🔊';
-          audioText.textContent = 'Mute Music';
-          audioToggle.classList.add('audio-playing');
-        }).catch(err => {
-          console.log('Falling back to synth player:', err);
-          startSynthMusic();
-        });
-      } else {
-        startSynthMusic();
-      }
-    } else {
-      if (bgSong) bgSong.pause();
-      stopSynthMusic();
-      isPlaying = false;
-      audioIcon.textContent = '🎵';
-      audioText.textContent = 'Play Music';
-      audioToggle.classList.remove('audio-playing');
-    }
-  });
-
-  function startSynthMusic() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    isPlaying = true;
-    audioIcon.textContent = '🔊';
-    audioText.textContent = 'Mute Music';
-    audioToggle.classList.add('audio-playing');
-
-    const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
-    let step = 0;
-    melodyInterval = setInterval(() => {
-      if (!isPlaying) return;
-      playNote(notes[step % notes.length], 1.2);
-      if (step % 2 === 0) playNote(notes[(step + 2) % notes.length] / 2, 1.8);
-      step++;
-    }, 800);
-  }
-
-  function stopSynthMusic() {
-    isPlaying = false;
-    audioIcon.textContent = '🎵'; audioText.textContent = 'Play Music';
-    audioToggle.classList.remove('audio-playing');
-    if (melodyInterval) clearInterval(melodyInterval);
-  }
-
-  function playNote(freq, duration) {
-    if (!audioCtx || !isPlaying) return;
-    try {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + duration);
-    } catch(e){}
-  }
-
   // ---------- 3D TILT EFFECT & LIGHTBOX ----------
   const frames = document.querySelectorAll('.frame');
   const lightboxModal = document.getElementById('lightboxModal');
@@ -808,9 +697,6 @@
     wishFulfilledMsg.classList.add('show');
     blowBtn.textContent = '✨ Wish Made & Candle Blown Out!';
     blowBtn.style.opacity = '0.7';
-    if (audioCtx) {
-      playNote(523.25, 0.5); setTimeout(() => playNote(659.25, 0.5), 200); setTimeout(() => playNote(783.99, 0.8), 400);
-    }
   }
 
   cakeContainer.addEventListener('click', blowOutCandle);
