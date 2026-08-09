@@ -715,7 +715,9 @@
     }
   });
 
-  // ---------- WISHES MODAL & LOCAL STORAGE ----------
+  // ---------- WISHES MODAL & GLOBAL REAL-TIME CLOUD DB ----------
+  const CLOUD_DB_URL = 'https://jsonblob.com/api/jsonBlob/019fe820-7081-7573-904e-856ffd708572';
+
   const wishModal = document.getElementById('wishModal');
   const openWishModalBtn = document.getElementById('openWishModal');
   const wishForm = document.getElementById('wishForm');
@@ -727,7 +729,7 @@
     wishModal.classList.remove('active');
   }
 
-  wishForm.addEventListener('submit', (e) => {
+  wishForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const sender = document.getElementById('wishSender').value.trim();
     const text = document.getElementById('wishText').value.trim();
@@ -738,6 +740,7 @@
       saveWishToStorage(sender, text);
       wishForm.reset();
       closeWishModal();
+      await saveWishToCloud(sender, text);
     }
   });
 
@@ -768,6 +771,44 @@
     localStorage.setItem('sm_birthday_wishes', JSON.stringify(saved));
   }
 
+  async function loadCloudWishes() {
+    try {
+      const res = await fetch(CLOUD_DB_URL, { headers: { 'Accept': 'application/json' } });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.wishes)) {
+          const featuredCard = wishesGrid.querySelector('.wish-card.featured');
+          wishesGrid.innerHTML = '';
+          if (featuredCard) wishesGrid.appendChild(featuredCard);
+
+          data.wishes.forEach(w => {
+            const card = createWishCard(w.sender, w.text, w.likes || 1);
+            wishesGrid.appendChild(card);
+          });
+        }
+      }
+    } catch(e) {
+      loadSavedWishes();
+    }
+  }
+
+  async function saveWishToCloud(sender, text) {
+    try {
+      let currentWishes = [];
+      const res = await fetch(CLOUD_DB_URL, { headers: { 'Accept': 'application/json' } });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.wishes)) currentWishes = data.wishes;
+      }
+      currentWishes.push({ sender, text, likes: 1, date: new Date().toISOString() });
+      await fetch(CLOUD_DB_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ wishes: currentWishes })
+      });
+    } catch(e){}
+  }
+
   function loadSavedWishes() {
     const saved = JSON.parse(localStorage.getItem('sm_birthday_wishes') || '[]');
     saved.forEach(w => {
@@ -775,7 +816,9 @@
       wishesGrid.append(card);
     });
   }
-  loadSavedWishes();
+
+  loadCloudWishes();
+  setInterval(loadCloudWishes, 15000);
 
   // ---------- INTERACTIVE CAKE CANDLE BLOWOUT ----------
   const cakeContainer = document.getElementById('cakeContainer');
