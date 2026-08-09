@@ -56,41 +56,6 @@
     pointer-events: none; z-index: 2;
   }
 
-  /* ---------- TOP CONTROLS ---------- */
-  .top-controls {
-    position: fixed; top: 20px; right: 20px; z-index: 99;
-    display: flex; gap: 12px; align-items: center;
-  }
-  .control-btn {
-    background: rgba(36, 26, 20, 0.85);
-    border: 1px solid var(--gold);
-    color: var(--gold-light);
-    padding: 9px 18px;
-    border-radius: 30px;
-    font-family: 'Lora', serif;
-    font-size: 0.85rem;
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-    display: flex; align-items: center; gap: 8px;
-    transition: all 0.3s ease;
-  }
-  .control-btn:hover {
-    background: var(--gold); color: var(--ink); transform: translateY(-2px);
-  }
-
-  /* ---------- TOAST NOTIFICATION ---------- */
-  .toast {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: var(--gold); color: var(--ink); font-weight: 600;
-    padding: 10px 24px; border-radius: 20px; font-size: 0.9rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 1000; opacity: 0;
-    transition: all 0.4s ease;
-  }
-  .toast.show {
-    transform: translateX(-50%) translateY(0); opacity: 1;
-  }
-
   /* ---------- HERO SECTION ---------- */
   .hero{
     position: relative; min-height: 100vh;
@@ -400,16 +365,6 @@
 <canvas id="petals-canvas"></canvas>
 <canvas id="sparkles-canvas"></canvas>
 
-<!-- Toast Notification -->
-<div class="toast" id="toast">Link copied to clipboard!</div>
-
-<!-- Top Navigation & Controls -->
-<div class="top-controls">
-  <button class="control-btn" id="shareBtn" title="Share website link">
-    <span>🔗</span> <span>Share</span>
-  </button>
-</div>
-
 <!-- HERO SECTION -->
 <section class="hero">
   <svg class="garland" viewBox="0 0 1000 150" preserveAspectRatio="none" aria-hidden="true">
@@ -690,17 +645,6 @@
     }
   }
   drawPetals();
-
-  // ---------- SHARE BUTTON TOAST ----------
-  const shareBtn = document.getElementById('shareBtn');
-  const toast = document.getElementById('toast');
-  shareBtn.addEventListener('click', () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    }).catch(() => {});
-  });
 
   // ---------- WAX SEAL INTERACTIVE UNSEAL ----------
   const waxSeal = document.getElementById('waxSeal');
